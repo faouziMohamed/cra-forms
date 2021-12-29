@@ -8,22 +8,18 @@ declare global {
 }
 
 export interface Data {
+  id: string;
+  fullId: string;
   name: string;
   email: string;
   formation: string;
   studyLevel: string;
+  status: string[];
   school?: string;
 }
+export type IMembersData = Data;
 
 export interface IFormDataSchema extends Data, Document {
-  name: string;
-  email: string;
-  formation: string;
-  studyLevel: string;
-  school?: string;
-}
-
-export interface IMembersData extends IFormDataSchema {
   id: string;
 }
 
@@ -39,3 +35,12 @@ export type Middleware = (
   res: Response,
   next: NextFunction,
 ) => void;
+
+export interface MemberDataWithCount {
+  data: IMembersData[];
+  count: number;
+}
+
+export interface TableData extends MemberDataWithCount {
+  columns: string[];
+}

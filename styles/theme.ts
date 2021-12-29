@@ -1,5 +1,6 @@
 import { green, red } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 // Create a theme instance.
 const fontFamily = ['Roboto', 'Ubuntu', 'Merriweather', 'sans-serif'].join(',');

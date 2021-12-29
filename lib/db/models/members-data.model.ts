@@ -1,11 +1,21 @@
 import type { Document } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-import { IFormDataSchema, IMembersData } from '../../lib.types';
+import type { IFormDataSchema } from '../../lib.types';
 import { startCase, startCaseAll, validateEmail } from '../../utils/utils';
 
 const membersDataSchema = new Schema<IFormDataSchema>(
   {
+    id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    fullId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     name: { type: String, required: true },
     email: {
       type: String,
@@ -17,21 +27,19 @@ const membersDataSchema = new Schema<IFormDataSchema>(
     },
     formation: { type: String, required: true },
     studyLevel: { type: String, required: true },
+    status: { type: [String] },
     school: { type: String },
   },
-  { timestamps: true },
+  { timestamps: true, toJSON: { transform }, toObject: { transform } },
 );
 
 membersDataSchema.index({ email: 1 }, { unique: true });
 
-const transform = (doc: Document, ret: IMembersData) => {
-  ret.id = ret._id as string;
+function transform(doc: Document, ret: IFormDataSchema) {
   delete ret._id;
   delete ret.__v;
-};
+}
 
-membersDataSchema.set('toJSON', { transform });
-membersDataSchema.set('toObject', { transform });
 membersDataSchema.pre('save', function reformatValues(next) {
   if (this.isModified('name')) this.name = startCaseAll(this.name);
   if (this.isModified('email')) this.email = this.email.toLowerCase();
