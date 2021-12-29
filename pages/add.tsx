@@ -1,19 +1,12 @@
 import { SaveRounded } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  FilledInput,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Stack,
-} from '@mui/material';
+import { Box, Button, CircularProgress, Stack } from '@mui/material';
 import { SyntheticEvent, useCallback, useRef, useState } from 'react';
 
 import ErrorAccordion from '../components/ErrorAccordion';
+import InputCustom from '../components/InputCustom';
 import Layout from '../components/Layout';
-import { Data } from '../lib/lib.types';
+import MultiSelect from '../components/MultiSelect';
+import { fields } from '../data/fields';
 import { postData, validateEmail } from '../lib/utils/utils';
 
 export default function Add() {
@@ -29,7 +22,17 @@ interface FormFieldValues {
   email: { value: string };
   formation: { value: string };
   studyLevel: { value: string };
+  status: { value: string };
   school: { value: string };
+}
+
+interface IFormData {
+  name: string;
+  email: string;
+  formation: string;
+  studyLevel: string;
+  status: string[];
+  school?: string;
 }
 
 interface LikelyErrorOrSuccess {
@@ -41,18 +44,21 @@ function MUICustomForm() {
   const [errors, setErrors] = useState<{ key: string; message: string }[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
+  const [reset, setReset] = useState(false);
   const onSubmit = useCallback(async (e: SyntheticEvent<HTMLFormElement>) => {
     const formErrors: { key: string; message: string }[] = [];
     e.preventDefault();
     setLoading(true);
+    setReset(false);
 
     const target = e.target as typeof e.target & FormFieldValues;
-    const { name, email, formation, studyLevel, school } = target;
+    const { name, email, formation, studyLevel, status, school } = target;
     if (
       !name.value ||
       !email.value ||
       !formation.value ||
       !studyLevel.value ||
+      !status.value ||
       !school.value
     ) {
       formErrors.push({
@@ -69,6 +75,7 @@ function MUICustomForm() {
 
     if (formErrors.length > 0) {
       setErrors(formErrors);
+      setLoading(false);
       return;
     }
     setErrors([]);
@@ -77,10 +84,11 @@ function MUICustomForm() {
       email: email.value,
       formation: formation.value,
       studyLevel: studyLevel.value,
+      status: status.value.toLowerCase().split(','),
       school: school.value,
     };
 
-    const { error, message } = (await postData<Data>(
+    const { error, message } = (await postData<IFormData>(
       '/api/members/add',
       data,
     )) as LikelyErrorOrSuccess;
@@ -91,45 +99,10 @@ function MUICustomForm() {
     }
     if (message) {
       formRef.current?.reset();
+      setReset(true);
+      setReset(false);
     }
   }, []);
-  const fields = [
-    {
-      name: 'name',
-      label: 'Nom et Prénom',
-      helperTxt: '',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'email',
-      label: 'Adresse Email',
-      helperTxt: 'Votre Email restera privée',
-      required: true,
-      type: 'email',
-    },
-    {
-      name: 'formation',
-      label: 'Formation',
-      helperTxt: '',
-      required: true,
-      type: 'text',
-    },
-    {
-      name: 'studyLevel',
-      label: "Niveau d'étude",
-      helperTxt: 'Licence, Master, Doctorat ou autre',
-      required: true,
-      type: 'text',
-    },
-    {
-      name: 'school',
-      label: 'École/Faculté',
-      helperTxt: 'Ex: Faculté des sciences,...',
-      required: false,
-      type: 'text',
-    },
-  ];
 
   return (
     <Box
@@ -141,30 +114,20 @@ function MUICustomForm() {
     >
       <ErrorAccordion errors={errors} />
       <Stack spacing={0.5} direction='column'>
-        {fields.map((field) => (
-          <FormControl
-            size='small'
-            key={field.name}
-            required={field.required}
-            variant='filled'
-            color='secondary'
-          >
-            <InputLabel htmlFor={field.name} variant='filled'>
-              {field.label}
-            </InputLabel>
-            <FilledInput
-              id={field.name}
-              aria-describedby={`${field.name}-helper-text`}
-              size='small'
-              type={field.type}
-              color='primary'
-              error={errors.some((err) => err.key === field.name)}
+        {fields.map((field) => {
+          return field.type === 'select' ? (
+            <MultiSelect
+              values={field.options!}
+              label={field.label}
+              key={field.name}
+              name={field.name}
+              required={field.required}
+              reset={reset}
             />
-            <FormHelperText id={`${field.name}-helper-text`}>
-              {field.helperTxt}
-            </FormHelperText>
-          </FormControl>
-        ))}
+          ) : (
+            <InputCustom field={field} errors={errors} key={field.name} />
+          );
+        })}
       </Stack>
       <Box className='relative flex justify-center items-center'>
         <Button

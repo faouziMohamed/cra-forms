@@ -17,7 +17,7 @@ const BoldText: FC<{ className?: string; color: string }> = ({
 
 export default function NavBar() {
   return (
-    <nav className='flex w-full items-center p-1 px-10 bg-[#1f9e50b9] bg-gradient-to-tl from-[#0b8600e0] via-[##b3ff00df end-[#0eac00df]'>
+    <nav className='flex w-full items-center p-1 px-3 bg-[#1f9e50b9] bg-gradient-to-tl from-[#0b8600e0] via-[##b3ff00df end-[#0eac00df]'>
       <Link href='/'>
         <a className='inline-block font-extrabold'>
           <Stack

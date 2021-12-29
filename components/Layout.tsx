@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import Head from 'next/head';
 import { FC } from 'react';
 
@@ -6,7 +7,7 @@ import NavBar from './NavBar';
 
 const Layout: FC = ({ children }) => {
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen pb-2'>
+    <Box className='flex flex-col items-center justify-center min-h-screen pb-2'>
       <Head>
         <title>
           Recencement des membres du CRA cellule Informatique | CRA ACEM
@@ -15,12 +16,11 @@ const Layout: FC = ({ children }) => {
       </Head>
 
       <NavBar />
-      <main className='flex flex-col items-center w-full flex-1 md:px-20 py-10 text-center'>
+      <main className='flex flex-col items-center w-full flex-1 px-5 md:px-20 py-10 text-center'>
         {children}
       </main>
-
       <Footer />
-    </div>
+    </Box>
   );
 };
 

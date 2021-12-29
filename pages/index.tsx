@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 
@@ -42,10 +43,10 @@ export function PageBody() {
     },
   ];
   return (
-    <div className='flex flex-wrap gap-6 items-center justify-around max-w-4xl mt-6 sm:w-full'>
+    <Box className='flex flex-wrap gap-6 items-center justify-around max-w-4xl mt-6 sm:w-full'>
       {actions.map((action) => (
         <Link href={action.href} key={action.label}>
-          <a className='flex flex-col gap-2 p-6 text-left border w-96 rounded-xl hover:text-[#25751d] focus:text-[#25751d]'>
+          <a className='grow sm:grow-0 flex flex-col gap-2 p-6 text-left border sm:w-96 rounded-xl hover:text-[#25751d] focus:text-[#25751d]'>
             <h3 className='text-2xl font-bold'>{action.label} &rarr;</h3>
             <small className='text-[.75rem] font-bold text-[#49494d]'>
               {action.description}
@@ -53,6 +54,6 @@ export function PageBody() {
           </a>
         </Link>
       ))}
-    </div>
+    </Box>
   );
 }

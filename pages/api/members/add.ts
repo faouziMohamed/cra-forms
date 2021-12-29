@@ -5,15 +5,9 @@ import {
   createMemberData,
   existsMember,
 } from '../../../lib/db/queries/form-data.queries';
+import type { IMembersData } from '../../../lib/lib.types';
+import { generateKTId } from '../../../lib/utils/utils';
 import { middlwares } from '../../../middleware/index.middlware';
-
-interface Data {
-  name: string;
-  email: string;
-  formation: string;
-  studyLevel: string;
-  school?: string;
-}
 
 interface ErrorData {
   error: string;
@@ -22,7 +16,7 @@ interface SuccessData {
   message: string;
 }
 interface NextReqWithBody extends NextApiRequest {
-  body: Data;
+  body: IMembersData;
 }
 
 const handler = nc().use(middlwares);
@@ -30,29 +24,38 @@ const handler = nc().use(middlwares);
 handler.post(
   async (
     req: NextReqWithBody,
-    res: NextApiResponse<Data | SuccessData | ErrorData>,
+    res: NextApiResponse<IMembersData | SuccessData | ErrorData>,
   ) => {
-    const { name, email, formation, studyLevel, school } = req.body;
+    const {
+      name,
+      email,
+      formation,
+      studyLevel,
+      school,
+      status = [],
+    } = req.body;
     try {
       // eslint-disable-next-line no-console
-      console.log(req.body);
-      if (!name || !email || !formation || !studyLevel) {
+      console.log('addd>', req.body);
+      if (!name || !email || !formation || !studyLevel || !status.length) {
         throw new Error('Certains champs important sont manquants');
       }
 
       if (await existsMember(email)) {
         throw new Error('Un membre avec cette adresse email existe déjà');
       }
-      const member = await createMemberData({
+      const { id, fullId } = generateKTId(email);
+      await createMemberData({
+        id,
+        fullId,
         name,
         email,
         formation,
         studyLevel,
+        status,
         school,
       });
 
-      // eslint-disable-next-line no-console
-      console.log(member);
       res.status(201).json({ message: 'Member created' });
     } catch (err) {
       res.status(400).json({ error: (<Error>err).message });
