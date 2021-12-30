@@ -41,6 +41,11 @@ export interface MemberDataWithCount {
   count: number;
 }
 
+interface TableColumn {
+  field: string;
+  header: string;
+}
+
 export interface TableData extends MemberDataWithCount {
-  columns: string[];
+  columns: TableColumn[];
 }

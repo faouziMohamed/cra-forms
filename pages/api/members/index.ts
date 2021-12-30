@@ -6,14 +6,14 @@ import type { TableData } from '../../../lib/lib.types';
 import { middlwares } from '../../../middleware/index.middlware';
 
 const Columns = [
-  'id',
-  'fullId',
-  'name',
-  'email',
-  'formation',
-  'studyLevel',
-  'status',
-  'school',
+  { field: 'id', header: 'ID' },
+  { field: 'fullId', header: 'ID Complet' },
+  { field: 'name', header: 'Nom' },
+  { field: 'email', header: 'Email' },
+  { field: 'formation', header: 'Formation' },
+  { field: 'studyLevel', header: "Niveau d'étude" },
+  { field: 'status', header: 'Statut' },
+  { field: 'school', header: 'Ecole' },
 ];
 
 interface ErrorData {
