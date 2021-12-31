@@ -4,7 +4,7 @@ import type Express from 'express';
 import type { Document, Model } from 'mongoose';
 
 declare global {
-  var MembersData: Model<IFormDataSchema>;
+  var Members: Model<IMembersSchema>;
 }
 
 export interface Data {
@@ -16,10 +16,12 @@ export interface Data {
   studyLevel: string;
   status: string[];
   school?: string;
+  joined: boolean;
+  adhesionDate: Date | undefined;
 }
 export type IMembersData = Data;
 
-export interface IFormDataSchema extends Data, Document {
+export interface IMembersSchema extends Data, Document {
   id: string;
 }
 

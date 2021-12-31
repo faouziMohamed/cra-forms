@@ -1,5 +1,5 @@
 import type { Data, IMembersData, MemberDataWithCount } from '../../lib.types';
-import MembersData from '../models/members-data.model';
+import Members from '../models/members.model';
 
 export const createMemberData = async ({
   id,
@@ -10,8 +10,10 @@ export const createMemberData = async ({
   studyLevel,
   school,
   status,
+  joined,
+  adhesionDate,
 }: Data) =>
-  MembersData.create({
+  Members.create({
     name,
     email,
     id,
@@ -20,15 +22,16 @@ export const createMemberData = async ({
     studyLevel,
     status,
     school,
+    joined,
+    adhesionDate,
   });
 
-export const existsMember = async (email: string) =>
-  MembersData.exists({ email });
+export const existsMember = async (email: string) => Members.exists({ email });
 
 type FC = (page: number, limit: number) => Promise<MemberDataWithCount>;
 
 export const getMembersDataAggregate = async () =>
-  MembersData.aggregate<IMembersData & { uid: string }>([
+  Members.aggregate<IMembersData & { uid: string }>([
     { $addFields: { uid: '$_id' } },
     { $project: { _id: 0, __v: 0 } },
   ]).exec();

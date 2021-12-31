@@ -4,10 +4,10 @@ import nc from 'next-connect';
 import {
   createMemberData,
   existsMember,
-} from '../../../lib/db/queries/form-data.queries';
-import type { IMembersData } from '../../../lib/lib.types';
-import { generateKTId } from '../../../lib/utils/utils';
-import { middlwares } from '../../../middleware/index.middlware';
+} from '../../../src/lib/db/queries/form-data.queries';
+import type { IMembersData } from '../../../src/lib/lib.types';
+import { generateKTId } from '../../../src/lib/utils/utils';
+import { middlwares } from '../../../src/middleware/index.middlware';
 
 interface ErrorData {
   error: string;
@@ -33,11 +33,19 @@ handler.post(
       studyLevel,
       school,
       status = [],
+      joined,
     } = req.body;
     try {
       // eslint-disable-next-line no-console
       console.log('addd>', req.body);
-      if (!name || !email || !formation || !studyLevel || !status.length) {
+      if (
+        !name ||
+        !email ||
+        !formation ||
+        !studyLevel ||
+        !status.length ||
+        typeof joined !== 'boolean'
+      ) {
         throw new Error('Certains champs important sont manquants');
       }
 
@@ -54,6 +62,8 @@ handler.post(
         studyLevel,
         status,
         school,
+        joined,
+        adhesionDate: joined ? new Date(Date.now()) : undefined,
       });
 
       res.status(201).json({ message: 'Member created' });

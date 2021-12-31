@@ -12,7 +12,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
-import theme from '../styles/theme';
+import theme from '../src/themes/theme';
 import createEmotionCache from '../utils/createEmotionCache';
 
 interface MyAppProps extends AppProps {

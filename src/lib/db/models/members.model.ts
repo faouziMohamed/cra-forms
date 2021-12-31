@@ -1,10 +1,10 @@
 import type { Document } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-import type { IFormDataSchema } from '../../lib.types';
+import type { IMembersSchema } from '../../lib.types';
 import { startCase, startCaseAll, validateEmail } from '../../utils/utils';
 
-const membersDataSchema = new Schema<IFormDataSchema>(
+const membersSchema = new Schema<IMembersSchema>(
   {
     id: {
       type: String,
@@ -29,18 +29,20 @@ const membersDataSchema = new Schema<IFormDataSchema>(
     studyLevel: { type: String, required: true },
     status: { type: [String] },
     school: { type: String },
+    joined: { type: Boolean, required: true },
+    adhesionDate: { type: Date, default: undefined },
   },
   { timestamps: true, toJSON: { transform }, toObject: { transform } },
 );
 
-membersDataSchema.index({ email: 1 }, { unique: true });
+membersSchema.index({ email: 1 }, { unique: true });
 
-function transform(doc: Document, ret: IFormDataSchema) {
+function transform(doc: Document, ret: IMembersSchema) {
   delete ret._id;
   delete ret.__v;
 }
 
-membersDataSchema.pre('save', function reformatValues(next) {
+membersSchema.pre('save', function reformatValues(next) {
   if (this.isModified('name')) this.name = startCaseAll(this.name);
   if (this.isModified('email')) this.email = this.email.toLowerCase();
   if (this.isModified('formation')) this.formation = startCase(this.formation);
@@ -53,8 +55,7 @@ membersDataSchema.pre('save', function reformatValues(next) {
   next();
 });
 
-const MembersData =
-  global.MembersData || model('MembersData', membersDataSchema);
-global.MembersData = MembersData;
+const Members = global.Members || model('Members', membersSchema);
+global.Members = Members;
 
-export default MembersData;
+export default Members;

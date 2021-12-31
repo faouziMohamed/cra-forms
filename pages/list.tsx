@@ -1,47 +1,31 @@
-import { gridClasses, Stack } from '@mui/material';
+import { AddBox } from '@mui/icons-material';
+import { Box, Button, Stack } from '@mui/material';
 import {
-  DataGrid,
-  frFR,
   GridColDef,
   GridRenderCellParams,
   GridRowsProp,
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarDensitySelector,
-  GridToolbarExport,
-  GridToolbarFilterButton,
 } from '@mui/x-data-grid';
 import Link from 'next/link';
 import useSWR from 'swr';
 
-import Layout from '../components/Layout';
-import type { TableData } from '../lib/lib.types';
-import { startCaseAll } from '../lib/utils/utils';
+import DataGridTable from '../src/components/DataGridTable';
+import Layout from '../src/components/Layout';
+import type { TableData } from '../src/lib/lib.types';
+import { startCaseAll } from '../src/lib/utils/utils';
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer className={gridClasses.container}>
-      <Stack direction='row' sx={{ '& *': { color: 'secondary.main' } }}>
-        <GridToolbarExport />
-        <GridToolbarDensitySelector />
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-      </Stack>
-    </GridToolbarContainer>
-  );
-}
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function ListPage() {
   const { data, error } = useSWR<TableData, Error>('/api/members', fetcher);
   if (!data) return <div>Loading...</div>;
   if (error) return <div>Failed to load</div>;
-  const { columns: cols, data: d } = data;
-  // console.log(data);
+  const { columns: cols, data: fetchedData } = data;
   const columns: GridColDef[] = cols.map((col) => ({
     field: col.field,
     headerName: col.header,
     headerAlign: 'center',
     minWidth: 150,
+    flex: 1,
     description: col.header,
     headerClassName: 'header-name',
     renderCell: (params: GridRenderCellParams<string>) => {
@@ -54,7 +38,7 @@ export default function ListPage() {
       );
     },
   }));
-  const rows: GridRowsProp = d.map((row) => ({
+  const rows: GridRowsProp = fetchedData.map((row) => ({
     ...row,
     status: startCaseAll(row.status.join(', ')),
   }));
@@ -65,37 +49,25 @@ export default function ListPage() {
         className='flex grow w-full  '
         sx={{
           height: '3rem',
-          '& .header-name': {
+          '& .MuiDataGrid-columnHeadersInner': {
             backgroundColor: 'secondary.main',
-            color: 'secondary.contrastText',
+            color: 'white',
           },
         }}
+        spacing={1}
       >
-        <DataGrid
-          localeText={{
-            ...frFR.components.MuiDataGrid.defaultProps.localeText,
-            toolbarDensity: 'Taille des colones',
-            toolbarDensityCompact: 'Petit',
-            toolbarDensityStandard: 'Moyen',
-            toolbarDensityComfortable: 'Large',
-          }}
-          checkboxSelection
-          rows={rows}
-          columns={columns}
-          density='compact'
-          sx={{
-            boxShadow: 2,
-            border: 2,
-            borderColor: 'secondary.dark',
-            '& .MuiDataGrid-cell:hover': {
-              color: 'primary.dark',
-            },
-          }}
-          components={{
-            // Toolbar: GridToolbar,
-            Toolbar: CustomToolbar,
-          }}
-        />
+        <Box className='flex justify-center items-center'>
+          <Button
+            variant='contained'
+            startIcon={<AddBox />}
+            color='success'
+            sx={{ backgroundColor: 'primary.main' }}
+            // className='bg-green-500 text-[#111]'
+          >
+            Ajouter un membre
+          </Button>
+        </Box>
+        <DataGridTable rows={rows} columns={columns} />
       </Stack>
     </Layout>
   );

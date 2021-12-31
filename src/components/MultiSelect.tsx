@@ -53,7 +53,6 @@ const MultiSelect: FC<ISelectProps> = ({
     );
   };
   const labelId = `${label}-label`;
-  console.log(valuess, reset);
   return (
     <FormControl required={required}>
       <InputLabel id={labelId}>{label}</InputLabel>
