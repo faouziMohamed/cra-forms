@@ -15,8 +15,22 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "sourceMap": true,
-    "noUnusedLocals": false
+    "noUnusedLocals": false,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["src/components/*"],
+      "@/pages/*": ["pages/*"],
+      "@/utils/*": ["src/lib/utils/*"],
+      "@/db/*": ["src/lib/db/*"],
+      "@/middlware/*": ["src/middleware/*"],
+      "@/data/*": ["src/data/*"],
+      "@/themes/*": ["src/themes/*"],
+      "@/styles/*": ["styles/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/public/*": ["public/*"]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.json"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.json", "src"],
   "exclude": ["node_modules"]
 }

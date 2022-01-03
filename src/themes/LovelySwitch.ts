@@ -1,4 +1,5 @@
-import { makeStyles, Theme } from '@mui/material';
+import { SwitchClasses, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 const pxToRem = (px: number, oneRemPx = 17) => `${px / oneRemPx}rem`;
 
@@ -38,7 +39,6 @@ const lovelySwitchStyles = (theme: Theme) => {
       backgroundColor: theme.palette.grey[50],
       opacity: 1,
       transition: theme.transitions.create(['background-color', 'border']),
-      boxSizing: 'border-box',
     },
     thumb: {
       boxShadow: 'none',

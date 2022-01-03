@@ -1,9 +1,19 @@
 import { SaveRounded } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Stack, Switch } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  Stack,
+  Switch,
+} from '@mui/material';
 import { SyntheticEvent, useCallback, useRef, useState } from 'react';
 
+import { useLovelySwitchStyles } from '@/themes/LovelySwitch';
+import { postData, validateEmail } from '@/utils/utils';
+
 import { fields } from '../data/fields';
-import { postData, validateEmail } from '../lib/utils/utils';
 import ErrorAccordion from './ErrorAccordion';
 import InputCustom from './InputCustom';
 import MultiSelect from './MultiSelect';
@@ -15,7 +25,7 @@ interface FormFieldValues {
   studyLevel: { value: string };
   status: { value: string };
   school: { value: string };
-  joined: { value: string };
+  joined: { checked: boolean };
 }
 interface IFormData {
   name: string;
@@ -24,6 +34,7 @@ interface IFormData {
   studyLevel: string;
   status: string[];
   school?: string;
+  joined: boolean;
 }
 interface LikelyErrorOrSuccess {
   error: string;
@@ -34,6 +45,8 @@ export default function AddMemberForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
   const [reset, setReset] = useState(false);
+  const lovelyStyles = useLovelySwitchStyles();
+  const [toggle, setToggle] = useState(false);
   const onSubmit = useCallback(async (e: SyntheticEvent<HTMLFormElement>) => {
     const formErrors: { key: string; message: string }[] = [];
     e.preventDefault();
@@ -41,8 +54,15 @@ export default function AddMemberForm() {
     setReset(false);
 
     const target = e.target as typeof e.target & FormFieldValues;
-    const { name, email, formation, studyLevel, status, school /* joined */ } =
-      target;
+    const {
+      name,
+      email,
+      formation,
+      studyLevel,
+      status,
+      school,
+      joined = { checked: false },
+    } = target;
     if (
       !name.value ||
       !email.value ||
@@ -76,6 +96,7 @@ export default function AddMemberForm() {
       studyLevel: studyLevel.value,
       status: status.value.toLowerCase().split(','),
       school: school.value,
+      joined: joined.checked,
     };
 
     const { error, message } = (await postData<IFormData>(
@@ -118,7 +139,26 @@ export default function AddMemberForm() {
             <InputCustom field={field} errors={errors} key={field.name} />
           );
         })}
-        <Switch name='joined' id='joined' />
+        <FormControl>
+          <FormControlLabel
+            control={
+              <Switch
+                classes={lovelyStyles}
+                name='joined'
+                checked={toggle}
+                id='joined'
+                onChange={(e) => setToggle(e.target.checked)}
+              />
+            }
+            sx={{
+              display: 'flex',
+              flexDirection: 'row-reverse',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            label='A compléter son adhésion'
+          />
+        </FormControl>
       </Stack>
       <Box className='relative flex justify-center items-center'>
         <Button

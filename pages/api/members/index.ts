@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
 
-import { getMembersDataWithPages } from '../../../src/lib/db/queries/form-data.queries';
-import type { TableData } from '../../../src/lib/lib.types';
-import { middlwares } from '../../../src/middleware/index.middlware';
+import { getMembersDataWithPages } from '@/db/queries/form-data.queries';
+import { TableData } from '@/lib/lib.types';
+import { middlwares } from '@/middlware/index.middlware';
 
 const Columns = [
   { field: 'id', header: 'ID' },
@@ -17,7 +17,6 @@ const Columns = [
   { field: 'joined', header: 'À adhéré' },
   { field: 'adhesionDate', header: "Date d'adhésion" },
 ];
-
 interface ErrorData {
   error: string;
 }

@@ -1,4 +1,5 @@
-import type { Data, IMembersData, MemberDataWithCount } from '../../lib.types';
+import type { Data, IMembersData, MemberDataWithCount } from '@/lib/lib.types';
+
 import Members from '../models/members.model';
 
 export const createMemberData = async ({

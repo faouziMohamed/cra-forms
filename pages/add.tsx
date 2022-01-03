@@ -1,5 +1,5 @@
-import AddMemberForm from '../src/components/AddMemberForm';
-import Layout from '../src/components/Layout';
+import AddMemberForm from '@/components/AddMemberForm';
+import Layout from '@/components/Layout';
 
 export default function Add() {
   return (

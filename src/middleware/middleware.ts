@@ -1,6 +1,7 @@
 import Cors from 'cors';
 
-import connectDB from '../lib/db/db.config';
+import connectDB from '@/db/db.config';
+
 import type { NextFunction, Request, Response } from '../lib/lib.types';
 
 export const cors = () =>

@@ -1,8 +1,8 @@
 import type { Document } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-import type { IMembersSchema } from '../../lib.types';
-import { startCase, startCaseAll, validateEmail } from '../../utils/utils';
+import type { IMembersSchema } from '@/lib/lib.types';
+import { startCase, startCaseAll, validateEmail } from '@/utils/utils';
 
 const membersSchema = new Schema<IMembersSchema>(
   {

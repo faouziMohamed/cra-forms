@@ -8,10 +8,10 @@ import {
 import Link from 'next/link';
 import useSWR from 'swr';
 
-import DataGridTable from '../src/components/DataGridTable';
-import Layout from '../src/components/Layout';
-import type { TableData } from '../src/lib/lib.types';
-import { startCaseAll } from '../src/lib/utils/utils';
+import DataGridTable from '@/components/DataGridTable';
+import Layout from '@/components/Layout';
+import type { TableData } from '@/lib/lib.types';
+import { startCaseAll } from '@/utils/utils';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -29,13 +29,31 @@ export default function ListPage() {
     description: col.header,
     headerClassName: 'header-name',
     renderCell: (params: GridRenderCellParams<string>) => {
-      return params.field === 'email' ? (
-        <Link href={`mailto:${params.value}`}>
-          <a className='underline'>{params.value}</a>
-        </Link>
-      ) : (
-        <span>{params.value}</span>
-      );
+      if (params.field === 'email') {
+        return (
+          <Link href={`mailto:${params.value}`}>
+            <a className='underline'>{params.value}</a>
+          </Link>
+        );
+      }
+      if (params.field === 'adhesionDate') {
+        return (
+          <span>
+            {params.value
+              ? new Date(params.value).toLocaleDateString('fr-FR', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })
+              : 'Non disponible'}
+          </span>
+        );
+      }
+      if (params.field === 'joined') {
+        return <span>{params.value ? 'Oui' : 'Non'}</span>;
+      }
+      return <span>{params.value}</span>;
     },
   }));
   const rows: GridRowsProp = fetchedData.map((row) => ({
@@ -61,8 +79,16 @@ export default function ListPage() {
             variant='contained'
             startIcon={<AddBox />}
             color='success'
-            sx={{ backgroundColor: 'primary.main' }}
-            // className='bg-green-500 text-[#111]'
+            sx={{
+              '&.MuiButton-contained': {
+                backgroundColor: 'secondary.dark',
+                color: '#fff',
+                fontWeight: 'bold',
+                '&:hover': {
+                  backgroundColor: 'secondary.main',
+                },
+              },
+            }}
           >
             Ajouter un membre
           </Button>

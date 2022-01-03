@@ -1,4 +1,4 @@
-export const statusValues = ['Etudiant(e)', 'Stagiare', 'Employé(e)', 'Autre'];
+export const statusValues = ['Etudiant(e)', 'Stagiaire', 'Employé(e)', 'Autre'];
 
 export const fields = [
   {
@@ -11,7 +11,7 @@ export const fields = [
   {
     name: 'email',
     label: 'Adresse Email',
-    helperTxt: 'Votre Email restera privée',
+    helperTxt: '',
     required: true,
     type: 'email',
   },

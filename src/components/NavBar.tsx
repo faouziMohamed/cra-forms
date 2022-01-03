@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FC } from 'react';
 
-import craIcon from '../../public/cra-icon.png';
+import craIcon from '@/public/cra-icon.png';
 
 const BoldText: FC<{ className?: string; color: string }> = ({
   color,
